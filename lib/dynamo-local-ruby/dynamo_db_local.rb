@@ -6,14 +6,15 @@ module DynamoLocalRuby
     PORT = 9389
     ENDPOINT = "http://localhost:#{PORT}"
 
+    PATH_TO_JAR = '../../../lib/jars/dynamodb_local'
+
     def initialize(pid)
       @pid = pid
     end
 
     class << self
       def up
-        local_path = File.expand_path('../../../lib/jars/dynamodb_local',
-                                      __FILE__)
+        local_path = File.expand_path(PATH_TO_JAR, __FILE__)
         lib_path = File.join(local_path, 'DynamoDBLocal_lib')
         jar_path = File.join(local_path, 'DynamoDBLocal.jar')
         pid = spawn("java -Djava.library.path=#{lib_path} -jar #{jar_path} "\
