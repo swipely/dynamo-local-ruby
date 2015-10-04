@@ -9,6 +9,10 @@ describe DynamoLocalRuby::DynamoDBLocal do
   end
 
   describe '.up' do
+    describe 'exit teardown' do
+
+    end
+
     after(:each) do
       described_class.down
     end

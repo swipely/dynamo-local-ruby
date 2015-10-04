@@ -22,6 +22,7 @@ module DynamoLocalRuby
         pid = spawn("java -Djava.library.path=#{lib_path} -jar #{jar_path} "\
                     "-sharedDb -inMemory -port #{PORT}")
         @instance = DynamoDBLocal.new(pid)
+        at_exit { teardown(pid) }
 
         test_connection
 
@@ -42,12 +43,18 @@ module DynamoLocalRuby
           end
         end
       end
+
+      private
+      def teardown(pid)
+        Process.kill('SIGINT', pid)
+        Process.waitpid2(pid)
+      rescue Errno::ESRCH
+      end
     end
 
     def down
       return unless @pid
-      Process.kill('SIGINT', @pid)
-      Process.waitpid2(@pid)
+      self.class.teardown(@pid)
       @pid = nil
     end
   end
