@@ -8,6 +8,8 @@ module DynamoLocalRuby
 
     PATH_TO_JAR = '../../../lib/jars/dynamodb_local'
 
+    RETRIES = 5
+
     def initialize(pid)
       @pid = pid
     end
@@ -21,11 +23,24 @@ module DynamoLocalRuby
                     "-sharedDb -inMemory -port #{PORT}")
         @instance = DynamoDBLocal.new(pid)
 
+        test_connection
+
         @instance
       end
 
       def down
         @instance.down if defined? @instance
+      end
+
+      def test_connection
+        RETRIES.times do
+          begin
+            Net::HTTP.get_response(URI.parse(ENDPOINT))
+            break
+          rescue Errno::ECONNREFUSED
+            sleep(0.5)
+          end
+        end
       end
     end
 

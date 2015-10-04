@@ -15,7 +15,6 @@ describe DynamoLocalRuby::SchemaLoader do
 
   before(:each) do
     DynamoLocalRuby::DynamoDBLocal.up
-    sleep(2) # remove once retries are enabled
   end
 
   after(:each) do

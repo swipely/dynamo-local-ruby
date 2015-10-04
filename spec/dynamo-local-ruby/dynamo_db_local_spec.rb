@@ -4,11 +4,11 @@ require 'spec_helper'
 describe DynamoLocalRuby::DynamoDBLocal do
   let(:dynamo_instance) { described_class.up }
 
-  describe '.up' do
-    before do
-      stub_const("#{described_class}::PATH_TO_JAR", SPEC_JAR_DIR)
-    end
+  before do
+    stub_const("#{described_class}::PATH_TO_JAR", SPEC_JAR_DIR)
+  end
 
+  describe '.up' do
     after(:each) do
       described_class.down
     end
@@ -26,10 +26,31 @@ describe DynamoLocalRuby::DynamoDBLocal do
       let(:uri) { URI.parse(described_class::ENDPOINT) }
       let(:response) { Net::HTTP.get_response(uri) }
 
+      context 'but is not accepting connections' do
+        context 'retries and is now accepting connections' do
+          it 'succeeds' do
+            call_count = 0
+            expect(Net::HTTP).to receive(:get_response).twice do
+              call_count += 1
+              fail Errno::ECONNREFUSED if call_count == 1
+            end
+
+            dynamo_instance
+          end
+        end
+
+        context 'retries and never accepts connections' do
+          it 'tries 5 times' do
+            expect(Net::HTTP).to receive(:get_response).exactly(5).times \
+              .and_raise(Errno::ECONNREFUSED.new)
+            dynamo_instance
+          end
+        end
+      end
+
       it 'responds to requests' do
         # I'd like this to be in a before block but couldn't get it working
         dynamo_instance
-        sleep(2) # remove this once retry is enabled
         expect { response }.to_not raise_error
       end
     end
