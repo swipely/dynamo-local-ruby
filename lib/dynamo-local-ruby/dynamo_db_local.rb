@@ -44,11 +44,11 @@ module DynamoLocalRuby
         end
       end
 
-      private
       def teardown(pid)
         Process.kill('SIGINT', pid)
         Process.waitpid2(pid)
       rescue Errno::ESRCH
+        nil
       end
     end
 

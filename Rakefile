@@ -6,7 +6,8 @@ require 'rspec/core/rake_task'
 RuboCop::RakeTask.new
 
 RSpec::Core::RakeTask.new
-
+LATEST_WEB_TGZ = 'http://dynamodb-local.s3-website-us-west-2.amazonaws.com'\
+                   '/dynamodb_local_latest.tar.gz'
 JAR_NAME = 'DynamoDBLocal.jar'
 LOCAL_JAR_DIR = '../lib/jars/dynamodb_local'
 SPEC_JAR_DIR = File.expand_path('./spec/dynamo-local-ruby/support/jars/')
@@ -30,9 +31,7 @@ task build: :download_dynamodb_local
 
 def download_jar(local_path)
   latest = File.join(local_path, 'dynamodb_local_latest.tar.gz')
-  latest_web_tgz = 'http://dynamodb-local.s3-website-us-west-2.amazonaws.com'\
-                   '/dynamodb_local_latest.tar.gz'
-  `wget #{latest_web_tgz} -O #{latest}` unless File.exist?(latest)
+  `wget #{LATEST_WEB_TGZ} -O #{latest}` unless File.exist?(latest)
   `tar xzf #{latest} -C #{local_path}`
   `rm #{latest}` if File.exist?(latest)
 end

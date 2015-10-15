@@ -10,7 +10,21 @@ describe DynamoLocalRuby::DynamoDBLocal do
 
   describe '.up' do
     describe 'exit teardown' do
+      let(:pid) { 123 }
 
+      context 'pid exists' do
+        it 'kills and waits' do
+          Process.should_receive(:kill).with('SIGINT', pid)
+          Process.should_receive(:waitpid2).with(pid)
+          described_class.send(:teardown, pid)
+        end
+      end
+
+      context 'no pid' do
+        it 'does not raise' do
+          expect { described_class.send(:teardown, pid) }.not_to raise_error
+        end
+      end
     end
 
     after(:each) do
