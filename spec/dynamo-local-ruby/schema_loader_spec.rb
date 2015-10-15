@@ -8,7 +8,10 @@ describe DynamoLocalRuby::SchemaLoader do
 
   let(:dynamo_client) do
     endpoint = DynamoLocalRuby::DynamoDBLocal::ENDPOINT
-    Aws::DynamoDB::Client.new(region: 'us-east-1', endpoint: endpoint)
+    Aws::DynamoDB::Client.new(region: 'us-east-1',
+                              endpoint: endpoint,
+                              access_key_id: 'test',
+                              secret_access_key: 'test')
   end
 
   subject { described_class.new(dynamo_client) }
