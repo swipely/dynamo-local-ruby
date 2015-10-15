@@ -3,6 +3,7 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'dynamo-local-ruby/version'
 
+# rubocop:disable Metrics/LineLength
 Gem::Specification.new do |spec|
   spec.name          = 'dynamo-local-ruby'
   spec.version       = DynamoLocalRuby::VERSION
@@ -23,4 +24,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'bundler', '~> 1.7'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rubocop'
+  spec.add_development_dependency 'rspec', '~> 3.0.0'
+  spec.add_development_dependency 'pry', '~> 0.10.2'
 end
+# rubocop:enable Metrics/LineLength
