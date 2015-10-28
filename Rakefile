@@ -4,18 +4,28 @@ require 'rubocop/rake_task'
 
 RuboCop::RakeTask.new
 
-task :download_dynamodb_local do
-  local_path = File.expand_path('../lib/jars/dynamodb_local', __FILE__)
-  `mkdir -p #{local_path}`
-  return if File.exist?(File.join(local_path, 'DynamoDBLocal.jar'))
-  latest = File.join(local_path, 'dynamodb_local_latest.tar.gz')
-  LATEST_WEB_TGZ = 'http://dynamodb-local.s3-website-us-west-2.amazonaws.com'\
-                   '/dynamodb_local_latest.tar.gz'
-  `wget #{LATEST_WEB_TGZ} -O #{latest}` unless File.exist?(latest)
-  `tar xzf #{latest} -C #{local_path}`
-  `rm #{latest}`
+dynamodb_local_path = File.expand_path('../lib/jars/dynamodb_local', __FILE__)
+dynamodb_local_tgz  = 'dynamodb_local_latest.tar.gz'
+dynamodb_local_source_pkg = File.join(dynamodb_local_path, dynamodb_local_tgz)
+
+directory dynamodb_local_path
+
+file dynamodb_local_source_pkg => dynamodb_local_path do |task|
+  s3_url = 'http://dynamodb-local.s3-website-us-west-2.amazonaws.com'
+  `wget #{s3_url}/#{dynamodb_local_tgz} -O #{task.name}`
+end
+
+task unpack_source_pkg: [
+  dynamodb_local_source_pkg,
+  dynamodb_local_path
+] do |task|
+  `tar xzf #{task.source} -C #{task.sources.last}`
+end
+
+task remove_source_pkg: dynamodb_local_source_pkg do |task|
+  rm task.source
 end
 
 task default: :rubocop
 
-task build: :download_dynamodb_local
+task build: [:unpack_source_pkg, :remove_source_pkg]
