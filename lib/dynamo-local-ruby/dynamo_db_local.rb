@@ -28,6 +28,7 @@ module DynamoLocalRuby
       end
     end
 
+    # rubocop:disable HandleExceptions
     def down
       return unless @pid
       begin
@@ -38,5 +39,6 @@ module DynamoLocalRuby
       end
       @pid = nil
     end
+    # rubocop:enable HandleExceptions
   end
 end
