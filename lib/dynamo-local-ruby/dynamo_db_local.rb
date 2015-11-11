@@ -30,8 +30,12 @@ module DynamoLocalRuby
 
     def down
       return unless @pid
-      Process.kill('SIGINT', @pid)
-      Process.waitpid2(@pid)
+      begin
+        Process.kill('SIGINT', @pid)
+        Process.waitpid2(@pid)
+      rescue Errno::ECHILD, Errno::ESRCH
+        # child process is dead
+      end
       @pid = nil
     end
   end
