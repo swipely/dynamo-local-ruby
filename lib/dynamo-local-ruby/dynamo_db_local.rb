@@ -28,11 +28,17 @@ module DynamoLocalRuby
       end
     end
 
+    # rubocop:disable HandleExceptions
     def down
       return unless @pid
-      Process.kill('SIGINT', @pid)
-      Process.waitpid2(@pid)
+      begin
+        Process.kill('SIGINT', @pid)
+        Process.waitpid2(@pid)
+      rescue Errno::ECHILD, Errno::ESRCH
+        # child process is dead
+      end
       @pid = nil
     end
+    # rubocop:enable HandleExceptions
   end
 end
