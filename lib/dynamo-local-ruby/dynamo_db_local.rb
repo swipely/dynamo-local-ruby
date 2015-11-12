@@ -4,13 +4,16 @@ module DynamoLocalRuby
   # Wrapper around Dynamo DB local process
   class DynamoDBLocal
     PORT = 9389
-    ENDPOINT = "http://localhost:#{PORT}"
 
     def initialize(pid)
       @pid = pid
     end
 
     class << self
+      def endpoint(port = PORT)
+        "http://localhost:#{port}"
+      end
+
       def up(port = PORT)
         local_path = File.expand_path('../../../lib/jars/dynamodb_local',
                                       __FILE__)
