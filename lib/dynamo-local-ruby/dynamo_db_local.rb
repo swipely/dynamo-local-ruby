@@ -4,20 +4,23 @@ module DynamoLocalRuby
   # Wrapper around Dynamo DB local process
   class DynamoDBLocal
     PORT = 9389
-    ENDPOINT = "http://localhost:#{PORT}"
 
     def initialize(pid)
       @pid = pid
     end
 
     class << self
-      def up
+      def endpoint(port = PORT)
+        "http://localhost:#{port}"
+      end
+
+      def up(port = PORT)
         local_path = File.expand_path('../../../lib/jars/dynamodb_local',
                                       __FILE__)
         lib_path = File.join(local_path, 'DynamoDBLocal_lib')
         jar_path = File.join(local_path, 'DynamoDBLocal.jar')
         pid = spawn("java -Djava.library.path=#{lib_path} -jar #{jar_path} "\
-                    "-sharedDb -inMemory -port #{PORT}")
+                    "-sharedDb -inMemory -port #{port}")
         @instance = DynamoDBLocal.new(pid)
 
         @instance

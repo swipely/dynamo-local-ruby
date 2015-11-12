@@ -22,7 +22,7 @@ Or install it yourself as:
 
 In your application code, initialize Dynamo clients with
 
-    Aws::DynamoDB::Client.new(endpoint: DynamoLocalRuby::DynamoDBLocal::ENDPOINT)
+    Aws::DynamoDB::Client.new(endpoint: DynamoLocalRuby::DynamoDBLocal.endpoint)
 
 Before the test suite starts (for instance in RSpec's `config.before(:suite)`).
 
