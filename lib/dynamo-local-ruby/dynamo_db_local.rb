@@ -11,13 +11,13 @@ module DynamoLocalRuby
     end
 
     class << self
-      def up
+      def up(port = PORT)
         local_path = File.expand_path('../../../lib/jars/dynamodb_local',
                                       __FILE__)
         lib_path = File.join(local_path, 'DynamoDBLocal_lib')
         jar_path = File.join(local_path, 'DynamoDBLocal.jar')
         pid = spawn("java -Djava.library.path=#{lib_path} -jar #{jar_path} "\
-                    "-sharedDb -inMemory -port #{PORT}")
+                    "-sharedDb -inMemory -port #{port}")
         @instance = DynamoDBLocal.new(pid)
 
         @instance
