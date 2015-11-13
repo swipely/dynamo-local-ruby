@@ -2,6 +2,8 @@
 
 Ruby wrapper around DynamoLocal to enable easier testing of your Ruby code that uses Dynamo.
 
+![](https://travis-ci.org/swipely/dynamo-local-ruby.svg?branch=master)
+
 ## Installation
 
 Add this line to your application's Gemfile:
