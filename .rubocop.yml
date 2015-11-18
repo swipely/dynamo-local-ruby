@@ -1,7 +1,10 @@
 # This is the configuration used to check the rubocop source code.
 
-Style/Encoding:
-  Enabled: true
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Max: 25
 
 Style/FileName:
   Enabled: false
