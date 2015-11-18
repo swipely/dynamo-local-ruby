@@ -1,7 +1,9 @@
 # encoding: utf-8
 require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
+RSpec::Core::RakeTask.new
 RuboCop::RakeTask.new
 
 dynamodb_local_path = File.expand_path('../lib/jars/dynamodb_local', __FILE__)
@@ -26,6 +28,6 @@ task remove_source_pkg: dynamodb_local_source_pkg do |task|
   rm task.source
 end
 
-task default: :rubocop
+task default: [:spec, :rubocop]
 
 task build: [:unpack_source_pkg, :remove_source_pkg]
